@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      debugShowCheckedModeBanner: false, // Remove the debug banner
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(),
     );
   }
@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ).then((_) {
-                setState(() {}); // Refresh the state when returning from the management screen
+                setState(() {});
               });
             },
           ),

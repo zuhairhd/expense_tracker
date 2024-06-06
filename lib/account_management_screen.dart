@@ -20,24 +20,38 @@ class AccountManagementScreen extends StatefulWidget {
 
 class _AccountManagementScreenState extends State<AccountManagementScreen> {
   final _formKey = GlobalKey<FormState>();
-  String? _accountName;
+  final _accountNameController = TextEditingController();
   bool _isEditing = false;
   Account? _editingAccount;
+
+  @override
+  void dispose() {
+    _accountNameController.dispose();
+    super.dispose();
+  }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      if (_isEditing && _editingAccount != null) {
-        widget.onEditAccount(_editingAccount!, _accountName!);
-        setState(() {
+      setState(() {
+        if (_isEditing && _editingAccount != null) {
+          widget.onEditAccount(_editingAccount!, _accountNameController.text);
           _isEditing = false;
           _editingAccount = null;
-        });
-      } else {
-        widget.onAddAccount(Account(name: _accountName!, balance: 0.0));
-      }
-      _formKey.currentState!.reset();
+        } else {
+          widget.onAddAccount(Account(name: _accountNameController.text, balance: 0.0));
+        }
+        _accountNameController.clear();
+      });
     }
+  }
+
+  void _startEditing(Account account) {
+    setState(() {
+      _isEditing = true;
+      _editingAccount = account;
+      _accountNameController.text = account.name;
+    });
   }
 
   @override
@@ -56,11 +70,8 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      controller: _accountNameController,
                       decoration: InputDecoration(labelText: 'Account Name'),
-                      initialValue: _isEditing ? _editingAccount?.name : '',
-                      onSaved: (value) {
-                        _accountName = value;
-                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter an account name';
@@ -91,12 +102,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.edit),
-                        onPressed: () {
-                          setState(() {
-                            _isEditing = true;
-                            _editingAccount = account;
-                          });
-                        },
+                        onPressed: () => _startEditing(account),
                       ),
                       IconButton(
                         icon: Icon(Icons.delete),
