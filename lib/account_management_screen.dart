@@ -27,15 +27,15 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      if (_isEditing && _editingAccount != null) {
-        widget.onEditAccount(_editingAccount!, _accountName!);
-        setState(() {
+      setState(() {
+        if (_isEditing && _editingAccount != null) {
+          widget.onEditAccount(_editingAccount!, _accountName!);
           _isEditing = false;
           _editingAccount = null;
-        });
-      } else {
-        widget.onAddAccount(Account(name: _accountName!, balance: 0.0));
-      }
+        } else {
+          widget.onAddAccount(Account(name: _accountName!, balance: 0.0));
+        }
+      });
       _formKey.currentState!.reset();
     }
   }
