@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'models/account.dart';
 import 'add_entry_screen.dart';
 import 'account_management_screen.dart';
+import 'account_status_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -63,6 +64,17 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Expense Tracker'),
         actions: [
+          IconButton(
+            icon: Icon(Icons.account_balance_wallet),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AccountStatusScreen(accounts: accounts),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: Icon(Icons.manage_accounts),
             onPressed: () {
